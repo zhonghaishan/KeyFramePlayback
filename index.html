@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!--*****START OF Azure Media Player scripts*****-->
+    <link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+	<link href="amp/skins/amp-default/azuremediaplayer.css" rel="stylesheet">
+    <script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
+	<script type="text/javascript" src="KeyFrames.js"></script>
+    <!--*****END OF Azure Media Player scripts*****-->
+</head>
+<style>
+.amp-default-skin.vjs-user-inactive .vjs-playing .vjs-control-bar{
+  opacity: 1;
+  z-index: 4;
+}
+</style>
+<body>
+<div>
+<p>
+<input id="sourceUrl" name="sourceUrl" style="width: 992px;" type="text" value="https://sigmamedia-usw22.streaming.media.azure.net/9bda6c9a-6f1e-40f6-a2eb-cb377ff1bc3c/manifest.ism/manifest" />
+</p>
+<button type="button" id="submit" onclick="refreshPage()">submit</button>
+</div>
+
+<div>
+<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" tabindex="0"></video>
+</div>
+
+<div>
+<form id="performance">
+<textarea name="events_textarea" cols="50" rows="5" readonly></textarea>
+</form>
+</div>
+<div>
+<form id="result">
+<textarea name="events_textarea" cols="150" rows="20" readonly></textarea>
+</form>
+</div>
+<script>
+
+window.onload = refreshPage;
+
+function refreshPage() {
+	document.getElementById("result").events_textarea.value = "";	
+	document.getElementById("performance").events_textarea.value = "";
+	setupAMPlayer();
+}
+
+// Register Plugin on AMP
+window.amp.plugin('KeyFrames', KeyFramesPlugin);
+function setupAMPlayer() {
+	var srcUrl = document.getElementById("sourceUrl").value;
+	var requestKeyframesUrl = document.getElementById("sourceUrl").value + "(video,format=m3u8-aapl,type=keyframes)";
+	var myOptions = {
+		"nativeControlsForTouch": false,
+		controls: true,
+		autoplay: false,
+		width: "800",
+		height: "600",
+        plugins: {
+			KeyFrames: {
+				requestKeyframesUrl: requestKeyframesUrl
+				}
+			}
+	};
+	myPlayer = amp("azuremediaplayer", myOptions);
+	myPlayer.src([
+        {
+                "src": srcUrl,
+                "type": "application/vnd.ms-sstr+xml"
+        }
+	]);
+}
+
+</script>
+</body>
+</html>
